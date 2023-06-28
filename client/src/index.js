@@ -5,11 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./Context/auth";
 import { BrowserRouter } from "react-router-dom";
+import SearchProvider from "./Context/Search";
+import "antd/dist/reset.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
+    <SearchProvider>
     <App />
+    </SearchProvider>
   </AuthProvider>
 );
 

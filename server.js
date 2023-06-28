@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import connectDB from "./config/connectDB.js";
 import authRoutes from "./routes/authRoute.js";
 import userModel from "./models/userModel.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRouets from "./routes/productRoutes.js";
 import Cors from "cors";
+import { categoryControlller } from "./controllers/categoryController.js";
 const app = express();
 
 app.use(Cors());
@@ -25,6 +28,11 @@ userModel();
 
 //routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/product", productRouets);
 
 //rest api
 app.get("/", (req, res) => {

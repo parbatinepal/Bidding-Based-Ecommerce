@@ -31,7 +31,7 @@ const Login = () => {
           user: res.data.user,
           token: res.data.token,
         });
-        localStorage.setItem("token", JSON.stringify(res.data.token));
+        localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/");
       } else {

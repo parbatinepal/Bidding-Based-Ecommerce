@@ -6,7 +6,7 @@ import { Toast, toast } from "react-hot-toast";
 import AdminMenu from "./AdminMenu";
 const Header = () => {
   const { auth, setAuth } = useAuth();
-  console.log(auth, "in headers");
+  console.log(auth?.user?.role, "in headers");
   const navigate = useNavigate();
 
   const handlelogout = () => {
@@ -88,7 +88,7 @@ const Header = () => {
                         <li>
                           <NavLink
                             to={
-                              auth?.user?.role == 0
+                              auth?.user?.role != 0
                                 ? "/admin/dashboard"
                                 : "/user/dashboard"
                             }

@@ -91,15 +91,13 @@ export const LoginController = async (req, res) => {
     }
     console.log("xyz");
 
-    let secretOrPrivateKey = "hg122@DJ83";
+    let secretOrPrivateKey = process.env.JWT_SECRET;
 
     let token = jwt.sign(
       { _id: user._id },
 
       secretOrPrivateKey,
-      {
-        expiresIn: "10d",
-      }
+      
     );
 
     res.status(200).send({
@@ -110,7 +108,7 @@ export const LoginController = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
-        role:user.role,
+        role: user.role,
       },
       token,
     });
