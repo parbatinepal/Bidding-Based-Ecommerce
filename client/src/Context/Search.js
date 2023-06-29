@@ -5,22 +5,14 @@ export const SearchContext = createContext();
 export const useSearch = () => useContext(SearchContext);
 
 const SearchProvider = ({ children }) => {
-  const [auth, setAuth] = useState(() => {
-    let keyword = localStorage.getItem("");
-    let results = JSON.parse(localStorage.getItem [""] || "{}");
-    return { keyword, results };
-  });
-
-
+  const [search, setSearch] = useState("");
   return (
     <>
-      <SearchContext.Provider value={{ auth, setAuth }}>
+      <SearchContext.Provider value={{ search, setSearch }}>
         {children}
       </SearchContext.Provider>
     </>
   );
 };
-
-// custom hook
 
 export default SearchProvider;

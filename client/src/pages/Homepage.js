@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/layout.js";
-
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Checkbox, Radio } from "antd";
 
 import e from "cors";
 import { Price } from "../components/Prices.js";
-import { useAuth } from "../Context/auth.js";
+// import { useAuth } from "../Context/auth.js";
+import { useSearch } from "../Context/Search.js";
 
 const HomePage = () => {
-  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate()
+  // const { auth, setAuth } = useAuth();
   const [products, setProducts] = useState([]); // Corrected destructuring
   const [categories, setCategories] = useState([]); // Corrected destructuring
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
-  const [total,setTotal] = useState(0)
-  const [page, setPage] = useState(1)
-  const [loading,setLoading] = useState(false)
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-
+  const { search } = useSearch();
 
   //get all category
   const getAllCategory = async () => {
@@ -41,15 +43,27 @@ const HomePage = () => {
     getTotal();
   }, []);
 
-  // console.log(localStorage.getItem("auth"));
-  // const data = JSON.stringify(localStorage.getItem("auth"));
-
+  console.log(localStorage.getItem("auth"));
+  const data = JSON.stringify(localStorage.getItem("auth"));
 
   //get products
+  // const getAllProducts = async () => {
+  //   try {
+  //     const { data } = await axios.get(`http://localhost:4000/api/v1/product/get-product`);
+  //     setProducts(data.products);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // //get products
   const getAllProducts = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:4000/api/v1/product/product-list/${page}`);
+      const { data } = await axios.get(
+        `http://localhost:4000/api/v1/product/product-list/${page}`
+      );
+
       setLoading(false);
       setProducts(data.products);
     } catch (error) {
@@ -59,25 +73,29 @@ const HomePage = () => {
   };
 
   // getTotal count
- const getTotal = async () => {
-  try {
-     const {data} = await axios.get('http://localhost:4000/api/v1/product/product-count')
-     setTotal(data?.total)
-  } catch (error) {
-    console.log(error)
-  }
- }
+  const getTotal = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:4000/api/v1/product/product-count"
+      );
+      setTotal(data?.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
- useEffect(() => {
+  useEffect(() => {
     if (page === 1) return;
     loadMore();
   }, [page]);
 
- //load more
+  //load more
   const loadMore = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:4000/api/v1/product/product-list/${page}`);
+      const { data } = await axios.get(
+        `http://localhost:4000/api/v1/product/product-list/${page}`
+      );
       setLoading(false);
       setProducts([...products, ...data?.products]);
     } catch (error) {
@@ -123,8 +141,11 @@ const HomePage = () => {
 
   return (
     <Layout title={"Best offers "}>
-      <div className="row mt-3">
-        <div className="col-md-2">
+      
+      <div className="d-flex flex-row"  style={{ width: "100%" }}>
+        
+        <div className="p-5" style={{ width: "20% " }}>
+        <div className="col-md-2" style={{ width: "100%" }}>
           <h4 className="text-center">Filter By Category</h4>
           <div className="d-flex flex-column">
             {categories?.map((c) => (
@@ -138,10 +159,11 @@ const HomePage = () => {
           </div>
         </div>
         {/* price filter */}
-        <div className="row mt-3">
-          <div div className="col-md-2">
+        
+          <div className="col-md-2"  style={{ width: "100%" }}>
+         
             <h4 className="text-center mt-4">Filter By Price</h4>
-            <div className="d-flex flex-column">
+            <div className=" flex-column">
               <Radio.Group onChange={(e) => setRadio(e.target.value)}>
                 {Price?.map((p) => {
                   console.log(p, "proce list");
@@ -155,17 +177,18 @@ const HomePage = () => {
               </Radio.Group>
             </div>
             <div className="d-flex flex-column">
-            <button
-              className="btn btn-danger"
-              onClick={() => window.location.reload()}
-            >
-              RESET FILTERS
-            </button>
-          </div>
-          </div>
+              <button
+                className="btn btn-danger"
+                onClick={() => window.location.reload()}
+              >
+                RESET FILTERS
+              </button>
+            </div> 
+           </div>
         </div>
-
-        <div className="col-md-9">
+        
+        
+        <div className="col" style={{ width: "50%" }}>
           {JSON.stringify(checked, radio, null, 4)}
           <h1 className="text-center">All Products</h1>
           <div div className="d-flex flex-wrap">
@@ -183,7 +206,10 @@ const HomePage = () => {
                   </p>
                   <p className="card-text"> $ {p.price}</p>
                   <div>
-                    <button className="btn btn-primary ms-1">
+                    <button
+                      className="btn btn-primary ms-1"
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    >
                       More Details
                     </button>
                     <button className="btn btn-secondary ms-1">
@@ -195,20 +221,21 @@ const HomePage = () => {
             ))}
           </div>
           <div className="m-2 p-3">
-            {products && products.length <total && (
-              <button className="btn btn-warning"
-              onClick={(e) => {
-                e.preventDefault();
-                setPage(page + 1);
-              }}
+            {products && products.length < total && (
+              <button
+                className="btn btn-warning"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(page + 1);
+                }}
               >
-               {loading ? "Loading ..." : "Loading"}
+                {loading ? "Loading ..." : "Loading"}
               </button>
             )}
-            
-           </div>
+          </div>
         </div>
-      </div>
+        </div>
+      
 
       {/* <h1>HomePage</h1>
       <h4>Email: {auth?.user?.email}</h4>
