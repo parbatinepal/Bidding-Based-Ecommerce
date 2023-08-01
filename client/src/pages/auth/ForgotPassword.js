@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../styles/AuthStyles.css";
 import { useAuth } from "../../Context/auth";
+import TextField from "@mui/material/TextField";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -48,35 +49,29 @@ const ForgotPassword = () => {
         <form onSubmit={handleSubmit}>
           <h4 className="title">RESET PASSWORD</h4>
           <div className="mb-3">
-            <input
-              type="email"
+          <TextField
+              label="Email"
+              variant="outlined"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="Enter your Email"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="text"
+          <TextField
+              label="Answer"
+              variant="outlined"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="Enter your favourite Bid Name"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="Password"
+          <TextField
+              label="Password"
+              variant="outlined"
               value={newpassowrd}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="form-control"
-              id="exampleInputPassword"
-              placeholder="Enter your Password"
               required
             />
           </div>

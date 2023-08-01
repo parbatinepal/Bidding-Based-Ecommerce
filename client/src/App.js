@@ -21,6 +21,11 @@ import { ToastContainer } from "react-toastify";
 import UpdateProduct from "./pages/Admin/UpdateProduct";
 import Search from "./pages/Search";
 import ProductDetails from "./pages/ProductDetails";
+import CartPage from "./pages/cartPage";
+import Categories from "./pages/Categories";
+import CategoryProduct from "./pages/CategoryProduct";
+import AdminOrders from "./pages/Admin/AdminOrders";
+import PaymentMethod from "./pages/Payment";
 
 function App() {
   return (
@@ -30,6 +35,10 @@ function App() {
         <Routes>
           <Route path="" element={<HomePage />} />
           <Route path="product/:slug" element={<ProductDetails />} />
+          <Route path="/categories" element={< Categories/>} />
+          <Route path="/category/:slug" element={< CategoryProduct/>} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="payment" element={<PaymentMethod />} />
           <Route path="search" element={<Search />} />
           <Route path="user" element={<PrivateRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
@@ -44,6 +53,7 @@ function App() {
             <Route path="product/:slug" element={<UpdateProduct />} />
 
             <Route path="users" element={<Users />} />
+            <Route path="orders" element={<AdminOrders />} />
           </Route>
 
           <Route path="/register" element={<Registers />} />
@@ -51,7 +61,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          
           <Route path="/policy" element={<Policy />} />
+          <Route path="/categories" element={<categories />} />
           <Route path="*" element={<Pagenotfound />} />
         </Routes>
       </BrowserRouter>

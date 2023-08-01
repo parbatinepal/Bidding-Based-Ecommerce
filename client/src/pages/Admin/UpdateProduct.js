@@ -93,7 +93,7 @@ const UpdateProduct = () => {
 
   const handleDelete = async () => {
     try {
-      let answer = window.prompt("Are You Sure want to delete this product ? ");
+      let answer = window.confirm("Are You Sure want to delete this product ? ");
       if (!answer) return;
       const { data } = await axios.delete(
         `http://localhost:4000/api/v1/product/delete-product?pid=${id}`
@@ -156,12 +156,12 @@ const UpdateProduct = () => {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <img
+                    {id ==""?"":<img
                       src={`http://localhost:4000/api/v1/product/product-photo/${id}`}
                       alt="product_photo"
                       height={"200px"}
                       className="img img-responsive"
-                    />
+                    />}
                   </div>
                 )}
               </div>

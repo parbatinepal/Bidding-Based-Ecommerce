@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/layout.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import { Checkbox, Radio } from "antd";
+import { useCart } from "../Context/cart";
+import './styles/Homepage.css'
 
-import e from "cors";
 import { Price } from "../components/Prices.js";
 // import { useAuth } from "../Context/auth.js";
 import { useSearch } from "../Context/Search.js";
+import { sanitizeFilter } from "mongoose";
 
 const HomePage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // const { auth, setAuth } = useAuth();
-  const [products, setProducts] = useState([]); // Corrected destructuring
-  const [categories, setCategories] = useState([]); // Corrected destructuring
+  const { cart, setCart } = useCart([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
   const [total, setTotal] = useState(0);
@@ -22,13 +26,12 @@ const HomePage = () => {
 
   const { search } = useSearch();
 
-  //get all category
+  // Fetch all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
         "http://localhost:4000/api/v1/category/get-category"
       );
-      console.log(data);
 
       if (data.success) {
         setCategories(data?.category);
@@ -43,36 +46,35 @@ const HomePage = () => {
     getTotal();
   }, []);
 
-  console.log(localStorage.getItem("auth"));
   const data = JSON.stringify(localStorage.getItem("auth"));
 
-  //get products
-  // const getAllProducts = async () => {
-  //   try {
-  //     const { data } = await axios.get(`http://localhost:4000/api/v1/product/get-product`);
-  //     setProducts(data.products);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // //get products
-  const getAllProducts = async () => {
+  // Fetch products for a specific page
+  const getProductsByPage = async (pageNumber) => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:4000/api/v1/product/product-list/${page}`
+        `http://localhost:4000/api/v1/product/product-list/${pageNumber}`
       );
-
       setLoading(false);
-      setProducts(data.products);
+      return data.products;
     } catch (error) {
       setLoading(false);
+      console.log(error);
+      return [];
+    }
+  };
+
+  // Fetch the first page of products
+  const getAllProducts = async () => {
+    try {
+      const products = await getProductsByPage(1);
+      setProducts(products);
+    } catch (error) {
       console.log(error);
     }
   };
 
-  // getTotal count
+  // Fetch the total count of products
   const getTotal = async () => {
     try {
       const { data } = await axios.get(
@@ -85,26 +87,34 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (page === 1) return;
-    loadMore();
-  }, [page]);
+    getAllProducts();
+    getTotal();
+  }, []);
 
-  //load more
-  const loadMore = async () => {
+  // Handle pagination
+  const handlePageChange = async (pageNumber) => {
     try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `http://localhost:4000/api/v1/product/product-list/${page}`
-      );
-      setLoading(false);
-      setProducts([...products, ...data?.products]);
+      const products = await getProductsByPage(pageNumber);
+      setProducts(products);
+      setPage(pageNumber);
     } catch (error) {
       console.log(error);
-      setLoading(false);
     }
   };
 
-  // filter by cat
+  // Load more products
+  const loadMore = async () => {
+    try {
+      const nextPage = page + 1;
+      const products = await getProductsByPage(nextPage);
+      setProducts([...products, ...products]);
+      setPage(nextPage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Filter by category
   const handleFilter = (value, id) => {
     let all = [...checked];
     if (value) {
@@ -123,7 +133,7 @@ const HomePage = () => {
     if (checked.length || radio.length) filterProduct();
   }, [checked, radio]);
 
-  //get filterd product
+  // Get filtered products
   const filterProduct = async () => {
     try {
       const { data } = await axios.post(
@@ -140,40 +150,41 @@ const HomePage = () => {
   };
 
   return (
-    <Layout title={"Best offers "}>
-      
-      <div className="d-flex flex-row"  style={{ width: "100%" }}>
-        
-        <div className="p-5" style={{ width: "20% " }}>
-        <div className="col-md-2" style={{ width: "100%" }}>
-          <h4 className="text-center">Filter By Category</h4>
-          <div className="d-flex flex-column">
-            {categories?.map((c) => (
-              <Checkbox
-                key={c._id}
-                onChange={(e) => handleFilter(e.target.checked, c._id)}
-              >
-                {c.name}
-              </Checkbox>
-            ))}
+    <Layout title={"Bids Best Offers"}>
+      <img
+        src="https://www.softwarecreatives.com/assets/images/ibg/in-img-5.jpg"
+        alt="bannersimage"
+        className="banner-img img"
+        padding={"12px"}
+        height={400}
+        width={"100%"}
+      />
+
+      <div className="d-flex flex-row" style={{ width: "100%" }}>
+        <div className="p-5" style={{ width: "20%" }}>
+          <div className="col-md-2" style={{ width: "100%" }}>
+            <h4 className="text-center">Filter By Category</h4>
+            <div className="d-flex flex-column">
+              {categories?.map((c) => (
+                <Checkbox
+                  key={c._id}
+                  onChange={(e) => handleFilter(e.target.checked, c._id)}
+                >
+                  {c.name}
+                </Checkbox>
+              ))}
+            </div>
           </div>
-        </div>
-        {/* price filter */}
-        
-          <div className="col-md-2"  style={{ width: "100%" }}>
-         
+          {/* price filter */}
+          <div className="col-md-2" style={{ width: "100%" }}>
             <h4 className="text-center mt-4">Filter By Price</h4>
             <div className=" flex-column">
               <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-                {Price?.map((p) => {
-                  console.log(p, "proce list");
-                  console.log(radio, "<<<z");
-                  return (
-                    <div key={p._id}>
-                      <Radio value={p.Array}>{p.name}</Radio>
-                    </div>
-                  );
-                })}
+                {Price?.map((p) => (
+                  <div key={p._id}>
+                    <Radio value={p.Array}>{p.name}</Radio>
+                  </div>
+                ))}
               </Radio.Group>
             </div>
             <div className="d-flex flex-column">
@@ -183,36 +194,48 @@ const HomePage = () => {
               >
                 RESET FILTERS
               </button>
-            </div> 
-           </div>
+            </div>
+          </div>
         </div>
-        
-        
-        <div className="col" style={{ width: "50%" }}>
-          {JSON.stringify(checked, radio, null, 4)}
-          <h1 className="text-center">All Products</h1>
-          <div div className="d-flex flex-wrap">
+
+        <div className="products">
+          <h1 className="title text-center">All Products</h1>
+          <div className="d-flex flex-wrap">
             {products?.map((p) => (
-              <div key={p._id} className="card m-2" style={{ width: "18rem" }}>
+              <div
+                className="card"
+                style={{  margin: "0 15px" }}
+                key={p._id}
+              >
                 <img
                   src={`http://localhost:4000/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
+                  loading="lazy"
                   alt={p.name}
                 />
+
                 <div className="card-body">
-                  <h5 className="card-title">{p.name}</h5>
-                  <p className="card-text">
-                    {p.description.substring(0, 30)}...
+                  <h5 className="fs-5 fw-bold">{p.name}</h5>
+                  <p className="text-muted">
+                    {p.description.substring(0, 50)}
+                    {p.description.length > 50 ? "..." : ""}
                   </p>
-                  <p className="card-text"> $ {p.price}</p>
-                  <div>
+                  <p className="fw-bold">NRs {p.price}</p>
+                  <div className="d-flex justify-content-between">
                     <button
-                      className="btn btn-primary ms-1"
+                      className="btn btn-primary"
                       onClick={() => navigate(`/product/${p.slug}`)}
                     >
                       More Details
                     </button>
-                    <button className="btn btn-secondary ms-1">
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        console.log("cart added", p);
+                        setCart([...cart, p]);
+                        toast.success("Items Added to cart");
+                      }}
+                    >
                       ADD TO CART
                     </button>
                   </div>
@@ -220,28 +243,21 @@ const HomePage = () => {
               </div>
             ))}
           </div>
-          <div className="m-2 p-3">
-            {products && products.length < total && (
+          <div className="pagination d-flex justify-content-center">
+            {Array.from({ length: Math.ceil(total / 3) }).map((_, index) => (
               <button
-                className="btn btn-warning"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(page + 1);
-                }}
+                key={index}
+                className={`btn btn-info text-light ${
+                  page === index + 1 ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(index + 1)}
               >
-                {loading ? "Loading ..." : "Loading"}
+                {index + 1}
               </button>
-            )}
+            ))}
           </div>
         </div>
-        </div>
-      
-
-      {/* <h1>HomePage</h1>
-      <h4>Email: {auth?.user?.email}</h4>
-      <h4>Name: {auth?.user?.name}</h4>
-      <h4>Phone: {auth?.user?.phone}</h4>
-      {JSON.stringify(auth?.["user"] || {})} */}
+      </div>
     </Layout>
   );
 };

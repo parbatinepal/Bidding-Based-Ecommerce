@@ -3,10 +3,10 @@ import Layout from "../components/layout/layout";
 const About = () => {
   return (
     <Layout title={"About us - Bidding-Based"}>
-      <div className="row contactus ">
+      <div className="row aboutsus ">
         <div className="col-md-6 ">
           <img
-            src="/images/about.jpg"
+             src="/images/Aboutus.jpg"
             alt="contactus"
             style={{ width: "100%" }}
           />
@@ -19,6 +19,7 @@ const About = () => {
             quasi sunt vero optio cum aperiam vel consectetur! Laborum enim
             accusantium atque, excepturi sapiente amet! Tenetur ducimus aut
             commodi illum quidem neque tempora nam.
+            
           </p>
         </div>
       </div>

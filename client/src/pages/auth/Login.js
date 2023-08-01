@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import "../styles/AuthStyles.css";
 import { useAuth } from "../../Context/auth";
 // import { useContext } from "react";
+import TextField from "@mui/material/TextField";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -49,41 +51,38 @@ const Login = () => {
         <h1>Login Form</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <input
-              type="email"
+          <TextField
+              label="Email"
+              variant="outlined"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="Enter your Email"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="Password"
+          <TextField
+              label="Password"
+              variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
-              id="exampleInputPassword"
-              placeholder="Enter your Password"
               required
             />
           </div>
+          
+          <button type="submit" className="btn btn-primary">
+            Login
+          </button>
           <div className="mb-3">
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn forgot-btn"
               onClick={() => {
                 navigate("/forgot-password");
               }}
             >
-              Forgot Password
+             <span className="mt-1">Forgot Password</span> 
             </button>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Login
-          </button>
         </form>
       </div>
     </Layout>

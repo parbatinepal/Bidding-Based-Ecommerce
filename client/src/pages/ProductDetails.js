@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/layout";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./styles/ProductDetailsStyles.css"
 const ProductDetails = () => {
   const params = useParams();
   const [product, setProduct] = useState({});
@@ -58,8 +59,11 @@ const ProductDetails = () => {
           <button className="btn btn-secondary ms-1">ADD TO CART</button>
         </div>
       </div>
-      <div className="row">
-        <h1>Similar Products</h1>
+      <hr />
+      <div className="row container">
+        <h6>Similar Products</h6>
+        {relatedProduct.length < 1 && (
+           <p className="text-center">No Similar Product found</p>)}
         <div div className="d-flex flex-wrap">
           {relatedProduct?.map((p) => (
             <div key={p._id} className="card m-2" style={{ width: "18rem" }}>
@@ -71,7 +75,7 @@ const ProductDetails = () => {
               <div className="card-body">
                 <h5 className="card-title">{p.name}</h5>
                 <p className="card-text">{p.description.substring(0, 30)}...</p>
-                <p className="card-text"> $ {p.price}</p>
+                <p className="card-text"> NRs {p.price}</p>
                 <div>
                   <button className="btn btn-secondary ms-1">
                     ADD TO CART

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../styles/AuthStyles.css";
+import TextField from "@mui/material/TextField";
 
 const Registers = () => {
   const [name, setName] = useState("");
@@ -12,6 +13,7 @@ const Registers = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [answer, setAnswer] = useState("");
+  const [role, setRole] = useState();
   const navigate = useNavigate();
 
   // form function
@@ -19,8 +21,9 @@ const Registers = () => {
     console.log(name, email, password, address, phone);
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:4000/api/v1/auth/register",
-        { name, email, password, phone, address, answer }
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/auth/register",
+        { name, email, password, phone, address, answer, role }
       );
       console.log(res.data);
       if (res && res.data.success) {
@@ -40,71 +43,89 @@ const Registers = () => {
         <h1>Register Form</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <input
-              type="text"
+          <TextField
+              label="Name"
+              variant="outlined"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail"
-              placeholder="Enter your Name"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="email"
+          <TextField
+              label="Email"
+              variant="outlined"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="Enter your Email"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="Password"
+              <TextField
+              label="Password"
+              variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
-              id="exampleInputPassword"
-              placeholder="Enter your Password"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="phone"
+          <TextField
+              label="Phone"
+              variant="outlined"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail"
-              placeholder="Enter your Phone"
               required
             />
           </div>
           <div className="mb-3">
-            <input
-              type="text"
+          <TextField
+              label="Address"
+              variant="outlined"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail"
-              placeholder="Enter your Address"
               required
             />
           </div>
-          <div className="mb-3">
-            <input
-              type="text"
+          <TextField
+              label="Answer"
+              variant="outlined"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail"
-              placeholder="What is your favourite bid"
               required
             />
+          <div className="my-3">
+            {/* <input
+              type="number"
+              min={0}
+              max={1}
+              value={role}
+              onChange={(e) => setRole(e.target.valueAsNumber)}
+              className="form-control"
+              id="exampleInputEmail1"
+              placeholder="What is your favourite role"
+              required
+              
+            /> */}
+            <TextField
+              label="number"
+              variant="outlined"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            />
+            {/* <TextField
+              label="number"
+              variant="outlined"
+              min={0}
+              max={1}
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            /> */}
+            
           </div>
+          
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
