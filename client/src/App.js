@@ -25,7 +25,7 @@ import CartPage from "./pages/cartPage";
 import Categories from "./pages/Categories";
 import CategoryProduct from "./pages/CategoryProduct";
 import AdminOrders from "./pages/Admin/AdminOrders";
-import PaymentMethod from "./pages/Payment";
+// import PaymentMethod from "./pages/Payment";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
           <Route path="/categories" element={< Categories/>} />
           <Route path="/category/:slug" element={< CategoryProduct/>} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="payment" element={<PaymentMethod />} />
+          {/* <Route path="payment" element={<PaymentMethod />} /> */}
           <Route path="search" element={<Search />} />
           <Route path="user" element={<PrivateRoute />}>
             <Route path="dashboard" element={<Dashboard />} />

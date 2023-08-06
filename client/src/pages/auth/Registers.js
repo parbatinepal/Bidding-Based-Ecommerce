@@ -64,6 +64,7 @@ const Registers = () => {
               <TextField
               label="Password"
               variant="outlined"
+              type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -110,6 +111,8 @@ const Registers = () => {
             <TextField
               label="number"
               variant="outlined"
+              min={0}
+              max={1}
               value={role}
               onChange={(e) => setRole(e.target.value)}
               required

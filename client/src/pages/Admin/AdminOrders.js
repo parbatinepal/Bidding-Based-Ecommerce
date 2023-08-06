@@ -18,24 +18,32 @@ const AdminOrders = () => {
   ]);
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
-  const {auth, setAuth} = useAuth();
+  const { auth, setAuth } = useAuth();
+
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("http://localhost:4000/api/v1/auth/all-orders");
-      setOrders(data);
-      console.log(data + "E")
+      const  data  = await axios.get(
+        "http://localhost:4000/api/v1/auth/all-orders"
+      );
+      const res = await data.data
+      setOrders(res);
+      console.log(res + " Hello");
     } catch (error) {
       console.log(error);
     }
   };
 
+  console.log(orders + "Ordersjsg");
+
   useEffect(() => {
-    if (auth?.token) getOrders();
+    getOrders();
+    if (auth?.token) {
+    }
   }, [auth?.token]);
 
   const handleChange = async (orderId, value) => {
     try {
-      const { data } = await axios.put(`http://localhost:4000/api/v1/auth/order-status/${orderId}`, {
+      const { data } = await axios.put(`http://localhost:4000/api/v1/auth/orders/${orderId}`, {
         status: value,
       });
       getOrders();
@@ -63,12 +71,13 @@ const AdminOrders = () => {
                       <th scope="col"> date</th>
                       <th scope="col">Payment</th>
                       <th scope="col">Quantity</th>
+                      <th scope="col">TotalPrice</th>
                     </tr>
                   </thead>
                   <tbody>
                   
                     <tr>
-                      <td>{0+ 1}</td>
+                      <td>{i + 1}</td>
                       <td>
                         <Select
                           bordered={false}
@@ -82,22 +91,25 @@ const AdminOrders = () => {
                           ))}
                         </Select>
                       </td>
-                      <td>{o?.buyer?.name}</td>
+                      <td>{o?.buyer}</td>
                       <td>{moment(o?.createAt).fromNow()}</td>
-                      <td>{o?.payment.success ? "Success" : "Failed"}</td>
+                      <td>{o?.payment}</td>
                       <td>{o?.products?.length}</td>
+                      <td>{ o.totalprice}</td>
                     </tr>
                   </tbody>
                 </table>
                 <div className="container">
-                  {orders?.products?.map((p) => (
+                  {o?.products?.map((p, i) => (
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
                       <div className="col-md-4">
-                      <img
-                    src={`http://localhost:4000/api/v1/product/product-photo/${p._id}`}
-                    className="card-img-top"
-                    alt={p.name}
-                  />
+                        <img
+                          src={`http://localhost:4000/api/v1/product/product-photo/${p._id}`}
+                          className="card-img-top"
+                          alt={p.name}
+                          width="100px"
+                          height={"100px"}
+                        />
                       </div>
                       <div className="col-md-8">
                         <p>{p.name}</p>

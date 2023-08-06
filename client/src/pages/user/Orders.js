@@ -53,22 +53,24 @@ const Orders = () => {
                         <th scope="col">Date</th>
                         <th scope="col">Payment</th>
                         <th scope="col">Quantity</th>
+                        <th scope="col">TotalPrice</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {orders.map((o) => {
+                      {orders.map((o,i) => {
                         console.log(orders);
                         return (
                           <React.Fragment key={o._id}>
                             <tr>
-                              <td>{ 1}</td>
+                              <td>{ i+1}</td>
                               <td>{o?.status}</td>
-                              <td>{o?.buyer?.name}</td>
+                              <td>{o?.buyer}</td>
                               <td>{moment(o?.createAt).fromNow()}</td>
                               <td>
-                                {o?.payment.success ? "Success" : "Failed"}
+                              {o?.payment}
                               </td>
                               <td>{o?.products?.length}</td>
+                              <td>{ o.totalprice}</td>
                             </tr>
                             <div className="container">
                               {o?.products?.map((p) => (
@@ -90,6 +92,7 @@ const Orders = () => {
                                     <p>{p.description.substring(0, 30)}</p>
                                     <p>Price: {p.price}</p>
                                   </div>
+                                  
                                 </div>
                               ))}
                             </div>

@@ -81,7 +81,7 @@ const Header = () => {
                         className="dropdown-item"
                         to={`/category/${c.slug}`}
                       >
-                        {c.name}
+                        {c.name}    
                       </Link>
                     </li>
                     ))}

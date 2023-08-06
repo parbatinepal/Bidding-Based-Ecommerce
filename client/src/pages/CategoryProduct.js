@@ -3,12 +3,18 @@ import Layout from '../components/layout/layout'
 import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
 import "../pages/styles/CategoryProductsStyles.css"
+import { useCart } from "../Context/cart";
+import { toast } from "react-hot-toast";
+
 
 const CategoryProduct = () => {
+  const { cart, setCart } = useCart([]);
+
     const params = useParams();
     const navigate = useNavigate();
     const [products , setProducts] = useState([]);
     const [category , setCategory] = useState([]);
+    const { addToCart, removeCartItem, totalPrice } = useCart();
 
     useEffect(() => {
         if(params?.slug) getProductsByCat();
@@ -59,7 +65,12 @@ const CategoryProduct = () => {
                       More Details
                     </button>
                     <button
-                      className="btn btn-success" >
+                       className="btn btn-success"
+                       onClick={() => {
+                         console.log("cart added", p);
+                         setCart([...cart, p]);
+                         toast.success("Items Added to cart");
+                       }} >
                       ADD TO CART
                     </button>
                   </div>

@@ -204,7 +204,7 @@ const HomePage = () => {
             {products?.map((p) => (
               <div
                 className="card"
-                style={{  margin: "0 15px" }}
+                style={{ width: "30%", margin: "0 15px" }}
                 key={p._id}
               >
                 <img

@@ -4,6 +4,7 @@ import Layout from "../../components/layout/layout";
 import { useAuth } from "../../Context/auth";
 import toast from "react-hot-toast";
 import axios from "axios";
+import TextField from "@mui/material/TextField";
 const Profile = () => {
   //context
   const { auth, setAuth } = useAuth();
@@ -64,56 +65,50 @@ const Profile = () => {
               <form onSubmit={handleSubmit}>
                 <h4 className="title">USER PROFILE</h4>
                 <div className="mb-3">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Name"
-                    autoFocus
+                <TextField
+                  label="Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                 />
+                </div>
+                <div className="mb-3">
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   />
                 </div>
                 <div className="mb-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Email "
-                    disabled
-                  />
+                <TextField
+                  label="Password"
+                   variant="outlined"
+                   type="password" 
+                   value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                 />
                 </div>
                 <div className="mb-3">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-control"
-                    id="exampleInputPassword1"
-                    placeholder="Enter Your Password"
-                  />
+                <TextField
+                  label="Phone"
+                  variant="outlined"
+                  value={phone}
+                   onChange={(e) => setPhone(e.target.value)}
+                   required
+                />
                 </div>
                 <div className="mb-3">
-                  <input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Phone"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Address"
-                  />
+                <TextField
+                   label="Address"
+                  variant="outlined"
+                  value={address}
+                   onChange={(e) => setAddress(e.target.value)}
+                   required
+                 />
                 </div>
 
                 <button type="submit" className="btn btn-primary">

@@ -213,13 +213,15 @@ export const updateProfileController = async (req, res) => {
   }
 };
 
- //orders
+//orders
 export const getOrdersController = async (req, res) => {
+  console.log(req.user, "user here");
   try {
-    const orders = await orderModel
-      .find({ })
-      // .populate("products", "-photo")
-      // .populate("buyer", "name");
+    const orders = await orderModel.find(
+      // { buyer: req.user._id }
+      )
+    .populate("products", "-photo")
+    .populate("buyer", "name");
     res.json(orders);
   } catch (error) {
     console.log(error);
@@ -231,31 +233,28 @@ export const getOrdersController = async (req, res) => {
   }
 };
 
-
- // all orders
+// all orders
 export const getAllOrdersController = async (req, res) => {
   try {
     const orders = await orderModel
       .find({})
       .populate("products", "-photo")
       .populate("buyer", "name")
-      .sort({ createdAt: "-1" });
+      .sort({ createdAt: -1 }); // Removed the quotes around -1 for correct sorting
     res.json(orders);
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
+    console.error(error); // Use console.error for better log visibility
+    res.status(500).json({
       success: false,
-      message: "Error WHile Geting Orders",
-      error,
+      message: "Error while retrieving orders",
     });
   }
 };
 
-
 export const postOrdersController = async (req, res) => {
   try {
-    const { products, payment, status, buyer } = req.body;
-    let order = await orderModel({ products, payment, status, buyer });
+    const { products, payment, status, buyer,totalprice } = req.body;
+    let order = new orderModel({ products, payment, status, buyer,totalprice });
     order = await order.save();
     res.json(order);
   } catch (error) {
@@ -267,3 +266,25 @@ export const postOrdersController = async (req, res) => {
     });
   }
 };
+
+//order status
+export const orderStatusController = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const orders = await orderModel.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error While Updateing Order",
+      error,
+    });
+  }
+};
+

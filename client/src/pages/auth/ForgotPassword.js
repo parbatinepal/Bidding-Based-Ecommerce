@@ -70,6 +70,7 @@ const ForgotPassword = () => {
           <TextField
               label="Password"
               variant="outlined"
+              type="password" 
               value={newpassowrd}
               onChange={(e) => setNewPassword(e.target.value)}
               required

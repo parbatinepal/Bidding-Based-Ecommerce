@@ -46,6 +46,8 @@ const CartProvider = ({ children }) => {
     toast.success("Item added to cart successfully...");
   };
 
+  
+
   return (
     <CartContext.Provider value={{ cart, setCart, addToCart, removeCartItem,totalPrice }}>
       {children}

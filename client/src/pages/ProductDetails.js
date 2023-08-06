@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/layout";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useCart } from "../Context/cart";
+import { toast } from "react-hot-toast";
 import "./styles/ProductDetailsStyles.css"
 const ProductDetails = () => {
+  const { cart, setCart } = useCart([]);
+
   const params = useParams();
   const [product, setProduct] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
@@ -77,9 +81,16 @@ const ProductDetails = () => {
                 <p className="card-text">{p.description.substring(0, 30)}...</p>
                 <p className="card-text"> NRs {p.price}</p>
                 <div>
-                  <button className="btn btn-secondary ms-1">
-                    ADD TO CART
-                  </button>
+                <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        console.log("cart added", p);
+                        setCart([...cart, p]);
+                        toast.success("Items Added to cart");
+                      }}
+                    >
+                      ADD TO CART
+                    </button>
                 </div>
               </div>
             </div>
