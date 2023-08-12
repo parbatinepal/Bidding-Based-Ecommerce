@@ -6,11 +6,9 @@ import { useNavigate } from "react-router-dom";
 import "../pages/styles/CartStyles.css";
 import toast from "react-hot-toast";
 import KhaltiCheckout from "khalti-checkout-web";
-import Modal from '@material-ui/core/Modal';
+import Modal from "@material-ui/core/Modal";
 import KhaltiModal from "../khalti/KhaltiModal";
 import { KhaltiPayment } from "../khalti/KhaltiPayment";
-
- 
 
 
 const CartPage = () => {
@@ -19,88 +17,80 @@ const CartPage = () => {
   const user = localStorage.getItem("user");
   const { cart, setCart, removeCartItem, totalPrice } = useCart();
   const data = JSON.parse(user);
-  
 
   const navigate = useNavigate();
   console.log(cart, "in cart page");
-  const [value, setvalue] = useState(totalPrice())
-  const [show, setshow] = useState(true)
-  const [handleclose, sethandleclose] = useState(false)
+  const [value, setvalue] = useState(totalPrice());
+  const [show, setshow] = useState(true);
+  const [handleclose, sethandleclose] = useState(false);
 
   //placeorder
   const placeorder = async () => {
-     try {
-      
-    const res=await fetch(`http://localhost:4000/api/v1/auth/orders`,
-    {
-        method:"POST",
+    try {
+      const res = await fetch(`http://localhost:4000/api/v1/auth/orders`, {
+        method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            
-          },
-        body:JSON.stringify({
-          "products":cart,
-           "payment":"khaltipayment",
-            "status":"Not Process",
-             "buyer":data["name"],
-             "totalprice":value
-              
-             
-        })
-    }
-    );
-    // if (!res.ok) {
-    //     throw new Error(`HTTP error! status:`);
-    //   }
-    console.log(res.body)
-    if(res.status==200){
-        const json=await res.json();
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          products: cart,
+          payment: "khaltipayment",
+          status: "Not Process",
+          buyer: data["name"],
+          totalprice: value,
+        }),
+      });
+      // if (!res.ok) {
+      //     throw new Error(`HTTP error! status:`);
+      //   }
+      console.log(res.body);
+      if (res.status == 200) {
+        const json = await res.json();
         console.log(json);
         toast.success("orders successfully");
+      }
+    } catch (e) {
+      console.log(e);
     }
-} catch (e) {
-    console.log(e);
-    
-}
-}
+  };
 
-let config = {
-  "publicKey": "test_public_key_916fd8233df146f28fe09f5e187abd8a",
-  "productIdentity": "1234567890",
-  "productName": "Drogon",
-  "productUrl": "http://gameofthrones.com/buy/Dragons",
-  "eventHandler": {
-    onSuccess (payload) {
-      placeorder()
-      // hit merchant api for initiating verfication
-      console.log(payload);
+  let config = {
+    publicKey: "test_public_key_916fd8233df146f28fe09f5e187abd8a",
+    productIdentity: "1234567890",
+    productName: "Drogon",
+    productUrl: "http://gameofthrones.com/buy/Dragons",
+    eventHandler: {
+      onSuccess(payload) {
+        placeorder();
+        // hit merchant api for initiating verfication
+        console.log(payload);
+      },
+      // onError handler is optional
+      onError(error) {
+        // handle errors
+        console.log(error);
+      },
     },
-    // onError handler is optional
-    onError (error) {
-      // handle errors
-      console.log(error);
-    }
-  },
-  // one can set the order of payment options and also the payment options based on the order and items in the array
-  paymentPreference: [
-    "MOBILE_BANKING",
-    "KHALTI",
-    "EBANKING",
-    "CONNECT_IPS",
-    "SCT",
-  ],
-};
-let checkout = new KhaltiCheckout(config);
-const [open, setOpen] = React.useState(false);
- 
-    const handleClose = () => {
-        setOpen(false);
-    };
- 
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    // one can set the order of payment options and also the payment options based on the order and items in the array
+    paymentPreference: [
+      "MOBILE_BANKING",
+      "KHALTI",
+      "EBANKING",
+      "CONNECT_IPS",
+      "SCT",
+    ],
+  };
+  let checkout = new KhaltiCheckout(config);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <Layout>
@@ -164,9 +154,7 @@ const [open, setOpen] = React.useState(false);
                   >
                     Update Address
                   </button>
-
                 </div>
-
               </>
             ) : (
               <div className="mb-3">
@@ -185,7 +173,6 @@ const [open, setOpen] = React.useState(false);
                         state: "/cart",
                       })
                     }
-
                   >
                     Plase Login to checkout
                   </button>
@@ -193,46 +180,54 @@ const [open, setOpen] = React.useState(false);
               </div>
             )}
             <button
-                    className="btn btn-primary"
-                    onClick={() =>
-                    // placeorder()}
-                    
-                    // checkout.show({amount: totalPrice()*100})
-                    handleOpen()
-                    }
-                  >
-                    Buynow
-                  </button>
-                  <Modal
-                onClose={handleClose}
-                open={open}
-                style={{
-                    position: 'absolute',
-                    border: '2px solid #000',
-                    backgroundColor: 'gray',
-                    boxShadow: '2px solid black',
-                    height: 400,
-                    width: 400,
-                    margin: 'auto'
-                }}
+              className="btn btn-primary"
+              onClick={() =>
+                // placeorder()}
+
+                // checkout.show({amount: totalPrice()*100})
+                handleOpen()
+              }
             >
-                <div>
+              Buynow
+            </button>
+            <Modal
+              onClose={handleClose}
+              open={open}
+              style={{
+                position: "absolute",
+                border: "2px solid #000",
+                backgroundColor: "gray",
+                boxShadow: "2px solid black",
+                height: 400,
+                width: 400,
+                margin: "auto",
+              }}
+            >
+              <div>
                 <div className="mb-3 p-3">
-    
-                 <input type="text" className="form-control" placeholder='Enter price' 
-    value={value} 
-    onChange={(e) => setvalue(e.target.value)}
-     />
-    
-  </div>
-  
-  
-  <button type="submit" className="btn btn-primary "onClick={() =>{
-    // checkout.show({amount: value*100})
-    // KhaltiModal({show:show,handleClose:handleclose,id:"123456",totalAmount:value})
-    KhaltiPayment("123",value,navigate).then(() => {placeorder()})
-  }} style={{marginLeft:"150px"}}>Submit</button>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter price"
+                    value={value}
+                    onChange={(e) => setvalue(e.target.value)}
+                  />
                 </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary "
+                  onClick={() => {
+                    // checkout.show({ amount: value * 100 });
+                    // KhaltiModal({show:show,handleClose:handleclose,id:"123456",totalAmount:value})
+                    KhaltiPayment("123",value,navigate)
+                    .then(() => {placeorder()})
+                  }}
+                  style={{ marginLeft: "150px" }}
+                >
+                  Submit
+                </button>
+              </div>
             </Modal>
           </div>
         </div>

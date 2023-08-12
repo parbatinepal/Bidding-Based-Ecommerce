@@ -1,7 +1,7 @@
 // khaltiConfig.js
 
  export const khaltiConfig = {
-  key: "test_public_key_3a422e3816cb494486d703976cdceaf7",
+  key: "test_public_key_916fd8233df146f28fe09f5e187abd8a",
   url: "https://a.khalti.com/api/v2/",
 };
 
