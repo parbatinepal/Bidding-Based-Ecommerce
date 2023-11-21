@@ -72,7 +72,8 @@ const Registers = () => {
           </div>
           <div className="mb-3">
           <TextField
-              label="Phone"
+          type="number"
+              label="phone"
               variant="outlined"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -109,6 +110,7 @@ const Registers = () => {
               
             /> */}
             <TextField
+            type="number"
               label="number"
               variant="outlined"
               min={0}

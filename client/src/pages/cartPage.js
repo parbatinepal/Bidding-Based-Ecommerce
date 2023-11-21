@@ -7,9 +7,7 @@ import "../pages/styles/CartStyles.css";
 import toast from "react-hot-toast";
 import KhaltiCheckout from "khalti-checkout-web";
 import Modal from "@material-ui/core/Modal";
-import KhaltiModal from "../khalti/KhaltiModal";
-import { KhaltiPayment } from "../khalti/KhaltiPayment";
-
+import KhaltiPayment from "../khalti/KhaltiPayment";
 
 const CartPage = () => {
   const auth = useAuth();
@@ -17,7 +15,7 @@ const CartPage = () => {
   const user = localStorage.getItem("user");
   const { cart, setCart, removeCartItem, totalPrice } = useCart();
   const data = JSON.parse(user);
-
+  const [minusvalue, setminusvalue] = useState(totalPrice() - 20);
   const navigate = useNavigate();
   console.log(cart, "in cart page");
   const [value, setvalue] = useState(totalPrice());
@@ -51,12 +49,13 @@ const CartPage = () => {
         toast.success("orders successfully");
       }
     } catch (e) {
+      
       console.log(e);
     }
   };
 
   let config = {
-    publicKey: "test_public_key_916fd8233df146f28fe09f5e187abd8a",
+    publicKey: "test_public_key_a59147b8ebef4d24b03154408ea13751",
     productIdentity: "1234567890",
     productName: "Drogon",
     productUrl: "http://gameofthrones.com/buy/Dragons",
@@ -205,13 +204,48 @@ const CartPage = () => {
             >
               <div>
                 <div className="mb-3 p-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter price"
-                    value={value}
-                    onChange={(e) => setvalue(e.target.value)}
-                  />
+                  <div className="d-flex justify-content-center">
+                    <h1
+                      style={{
+                        paddingRight: "10px",
+                        color: "white",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        let decvalue = value - 5;
+
+                        if (minusvalue == value) {
+                          toast.error("You cannot do more");
+                        } else {
+                          setvalue(decvalue);
+                        }
+                      }}
+                    >
+                      -
+                    </h1>
+                    <h1
+                      style={{
+                        paddingRight: "10px",
+                        paddingLeft: "10px",
+                        color: "white",
+                      }}
+                    >
+                      {value}
+                    </h1>
+                    <h1
+                      style={{
+                        paddingLeft: "10px",
+                        color: "white",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        let decvalue = value + 5;
+                        setvalue(decvalue);
+                      }}
+                    >
+                      +
+                    </h1>
+                  </div>
                 </div>
 
                 <button
@@ -220,8 +254,9 @@ const CartPage = () => {
                   onClick={() => {
                     // checkout.show({ amount: value * 100 });
                     // KhaltiModal({show:show,handleClose:handleclose,id:"123456",totalAmount:value})
-                    KhaltiPayment("123",value,navigate)
-                    .then(() => {placeorder()})
+                    KhaltiPayment("123", value, navigate).then(() => {
+                      placeorder();
+                    });
                   }}
                   style={{ marginLeft: "150px" }}
                 >

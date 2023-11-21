@@ -65,15 +65,13 @@ const Orders = () => {
                               <td>{ i+1}</td>
                               <td>{o?.status}</td>
                               <td>{o?.buyer}</td>
-                              <td>{moment(o?.createAt).fromNow()}</td>
-                              <td>
-                              {o?.payment}
-                              </td>
+                              <td>{moment(o.updatedAt).format('lll')}</td>
+                              <td> {o?.payment}</td>
                               <td>{o?.products?.length}</td>
                               <td>{ o.totalprice}</td>
                             </tr>
                             <div className="container">
-                              {o?.products?.map((p) => (
+                              {o?.products?.map((p,i) => (
                                 <div
                                   className="row mb-2 p-3 card flex-row"
                                   key={p._id}

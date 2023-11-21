@@ -282,9 +282,23 @@ export const orderStatusController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error While Updateing Order",
+      message: "Error While Updating Order",
       error,
     });
   }
 };
 
+
+//admin user
+export const getalluser=async(req,res)=>{
+  try {
+    let user = await userModel.find({});
+    res.json(user);
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong",
+      error,
+    });
+  }
+}
