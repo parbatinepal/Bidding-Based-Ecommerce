@@ -55,7 +55,7 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-
+   
       const { data } = await axios.post(
         "http://localhost:4000/api/v1/product/create-product",
         productData,
@@ -65,12 +65,13 @@ const CreateProduct = () => {
           },
         }
       );
+      console.log(productData)
 
       toast.success("Product Created Successfully", { autoClose: 1200 });
       // navigate(`admin/update-product/${name}`);
     } catch (error) {
       // toast.error("something went wrong");
-      // console.log(error);
+      // console.log(error);  
     }
   };
 

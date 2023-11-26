@@ -160,8 +160,8 @@ const HomePage = () => {
         width={"100%"}
       />
 
-      <div className="d-flex flex-row" style={{ width: "100%" }}>
-        <div className="p-5" style={{ width: "20%" }}>
+      <div className="row" style={{ width: "100%" }}>
+        <div className="p-5 col-md-3" style={{ width: "20%" }}>
           <div className="col-md-2" style={{ width: "100%" }}>
             <h4 className="text-center">Filter By Category</h4>
             <div className="d-flex flex-column">
@@ -198,13 +198,13 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="products">
+        <div className="products col-md-7">
           <h1 className="title text-center">All Products</h1>
-          <div className="d-flex flex-wrap">
+          <div className="row">
             {products?.map((p) => (
               <div
-                className="card"
-                style={{ width: "22%", margin: "0 15px" }}
+                className="card col-md-4"
+                style={{margin: "" }}
                 key={p._id}
               >
                 <img

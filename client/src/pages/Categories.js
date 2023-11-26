@@ -8,10 +8,10 @@ const Categories = () => {
     return (
       <Layout title={"All Categories"}>
         <div className="container">
-          <div className="row">
+          <div className="row gap-3" >
             {categories.map((c) => (
-              <div className="col-md-4 mt-5 mb-5 gx-6 gy-6" key={c._id}>
-                <Link to={`/category/${c.slug}`} className="btn btn-primary">
+              <div className="col-md-4 mt-5 mb-5 gx-6 gy-6  category_card" key={c._id}>
+                <Link to={`/category/${c.slug}`} className="btn btn-primary cat">
                   {c.name}
                 </Link>
               </div>

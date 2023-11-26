@@ -42,11 +42,11 @@ const Products = () => {
                 <Link
                   key={p._id}
                   to={`/admin/product/${p.slug}`}
-                  className="product-link col-md-4"
+                  className="product-link col-md-4 col-12"
                 >
                   <div
                     className="card m-2"
-                    style={{ width: "18rem", backgroundColor: "grey" }}
+                    style={{ backgroundColor: "grey" }}
                   >
                     <img
                       src={`http://localhost:4000/api/v1/product/product-photo/${p._id}`}
