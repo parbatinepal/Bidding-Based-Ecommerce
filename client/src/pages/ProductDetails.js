@@ -7,7 +7,8 @@ import { toast } from "react-hot-toast";
 import "./styles/ProductDetailsStyles.css"
 const ProductDetails = () => {
   const { cart, setCart } = useCart([]);
-
+  const user = localStorage.getItem("user");
+  const data = JSON.parse(user);
   const params = useParams();
   const [product, setProduct] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
@@ -18,13 +19,39 @@ const ProductDetails = () => {
   }, [params?.slug]);
 
   //getProduct
+  const addtoRecommendation=async()=>{
+    try {
+      const response = await fetch('`http://localhost:4000/api/v1/auth/addtorec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers as needed
+        },
+        body: JSON.stringify({
+          "category":product?.category?.name,"email":data["email"]
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // If you need the response data
+      const responseData = await response.json();
+      console.log('Response Data:', responseData);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  }
   const getProduct = async () => {
     try {
       const { data } = await axios.get(
         `http://localhost:4000/api/v1/product/get-product/${params.slug}`
       );
       setProduct(data?.product);
+
       getSimilarProduct(data?.product._id, data?.product.category._id);
+      addtoRecommendation();
     } catch (error) {
       console.log(error);
     }

@@ -23,6 +23,9 @@ const userschema = new mongoose.Schema({
         type:String,
         required:true
     },
+    recommendation:[
+      {  type:String}
+    ],
     answer:{
         type:String,
         required:true,

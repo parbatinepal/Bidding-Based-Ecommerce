@@ -302,3 +302,21 @@ export const getalluser=async(req,res)=>{
     });
   }
 }
+
+
+export const addtoRecommendation=async(req,res)=>{
+  try {
+    const {category,email}=req.body;
+    let user=await userModel.updateOne({email:email},{$addToSet:{
+      recommendation:category
+    }});
+     res.json(user);
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong",
+      error,
+    });
+    
+  }
+}

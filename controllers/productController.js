@@ -76,7 +76,22 @@ export const getProductController = async (req, res) => {
     });
   }
 };
-
+export const getrecommendationproduct=async(req,res)=>{
+  try {
+    const {recommendationList}=req.body;
+    const query = {
+      category: { $in: recommendationList },
+    };
+    let products=await productModel.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Erorr in getting products",
+      error: error.message,
+    });
+  }
+}
 // get single product
 export const getSingleProductController = async (req, res) => {
   try {

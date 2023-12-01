@@ -17,6 +17,7 @@ const HomePage = () => {
   // const { auth, setAuth } = useAuth();
   const { cart, setCart } = useCart([]);
   const [products, setProducts] = useState([]);
+  const [recommendationList, setrecommendationList] = useState([])
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
@@ -25,6 +26,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
 
   const { search } = useSearch();
+
 
   // Fetch all categories
   const getAllCategory = async () => {
@@ -63,11 +65,25 @@ const HomePage = () => {
       return [];
     }
   };
-
+const getrecommendationproduct=async()=>{
+  try {
+    setLoading(true);
+    const {data}=await axios.get("http://localhost:4000/api/v1/product/getrecommendationproduct");
+    setLoading(false);
+    return data.products;
+    
+  } catch (error) {
+    setLoading(false);
+      console.log(error);
+      return [];
+  }
+}
   // Fetch the first page of products
   const getAllProducts = async () => {
     try {
       const products = await getProductsByPage(1);
+      const recommendationListproduct=await getrecommendationproduct();
+      setrecommendationList(recommendationListproduct);
       setProducts(products);
     } catch (error) {
       console.log(error);
@@ -88,6 +104,7 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllProducts();
+    getrecommendationproduct();
     getTotal();
   }, []);
 
@@ -197,7 +214,52 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+{recommendationList.length<0}?<div></div> :<div className="products col-md-7">
+<h1 className="title text-center">Recommended Products</h1>
+<div className="row">
+{recommendationList?.map((p) => (
+              <div
+                className="card col-md-4"
+                style={{margin: "" }}
+                key={p._id}
+              >
+                <img
+                  src={`http://localhost:4000/api/v1/product/product-photo/${p._id}`}
+                  className="card-img-top"
+                  loading="lazy"
+                  alt={p.name}
+                />
 
+                <div className="card-body">
+                  <h5 className="fs-5 fw-bold">{p.name}</h5>
+                  <p className="text-muted">
+                    {p.description.substring(0, 50)}
+                    {p.description.length > 50 ? "..." : ""}
+                  </p>
+                  <p className="fw-bold">NRs {p.price}</p>
+                  <div className="d-flex justify-content-between">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => navigate(`/product/${p.slug}`)}
+                    >
+                      More Details
+                    </button>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        console.log("cart added", p);
+                        setCart([...cart, p]);
+                        toast.success("Items Added to cart");
+                      }}
+                    >
+                      ADD TO CART
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+</div>
+</div>
         <div className="products col-md-7">
           <h1 className="title text-center">All Products</h1>
           <div className="row">

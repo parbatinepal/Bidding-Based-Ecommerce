@@ -10,6 +10,7 @@ import {
   getAllOrdersController,
   orderStatusController,
   getalluser,
+  addtoRecommendation,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -57,7 +58,7 @@ router.post("/orders", postOrdersController);
 
 //all orders
 router.get("/all-orders", getAllOrdersController);
-
+router.post("/addtorec",addtoRecommendation);
 // order status update
 router.put(
   "/order-status/:orderId",
