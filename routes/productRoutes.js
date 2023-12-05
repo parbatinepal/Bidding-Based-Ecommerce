@@ -53,19 +53,19 @@ router.delete("/delete-product", deleteProductController);
 router.post("/product-filters", productFiltersController);
 
 //product count
-router.get('/product-count', productCountController);
+router.get("/product-count", productCountController);
 
 // product per page
-router.get('/product-list/:page', productListController);
+router.get("/product-list/:page", productListController);
 
 // search product
-router.get('/search/:keyword', searchProductController);
+router.get("/search/:keyword", searchProductController);
 
 // similar product
-router.get('/related-product/:pid/:cid', realtedProductController)
+router.get("/related-product/:pid/:cid", realtedProductController);
 
 // category wise product
-router.get('/product-category/:slug', productCategoryController);
-router.get("/getrecommendationproduct",getrecommendationproduct);
+router.get("/product-category/:slug", productCategoryController);
+router.post("/getrecommendationproduct", getrecommendationproduct);
 
 export default router;

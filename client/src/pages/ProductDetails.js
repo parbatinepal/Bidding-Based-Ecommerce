@@ -15,23 +15,25 @@ const ProductDetails = () => {
 
   //initial details
   useEffect(() => {
+    console.log(product)
     if (params?.slug) getProduct();
   }, [params?.slug]);
-
+ 
   //getProduct
-  const addtoRecommendation=async()=>{
+  const addtoRecommendation=async(category)=>{
+    console.log(category)
     try {
-      const response = await fetch('`http://localhost:4000/api/v1/auth/addtorec', {
+      const response = await fetch('http://localhost:4000/api/v1/auth/addtorec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           // Add any other headers as needed
         },
         body: JSON.stringify({
-          "category":product?.category?.name,"email":data["email"]
+          "category":category,"email":data["email"]
         }),
       });
-
+      console.log(response.body)
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -51,7 +53,8 @@ const ProductDetails = () => {
       setProduct(data?.product);
 
       getSimilarProduct(data?.product._id, data?.product.category._id);
-      addtoRecommendation();
+      console.log(data?.product.category._id)
+      addtoRecommendation(data?.product.category._id);
     } catch (error) {
       console.log(error);
     }

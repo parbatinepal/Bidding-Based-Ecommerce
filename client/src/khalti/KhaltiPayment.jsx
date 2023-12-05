@@ -63,7 +63,7 @@ const KhaltiPayment = async (id, totalAmount, product_name) => {
     if (response.status === 200) {
       const data = response.data;
       console.log({ data });
-
+      // window.navigator("/")
       window.location.href = data.payment_url;
     } else {
       console.error("Error:", response.statusText);

@@ -113,6 +113,9 @@ export const LoginController = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
+
+        recommendation: user.recommendation,
+
         role: user.role,
       },
       token,
@@ -217,11 +220,12 @@ export const updateProfileController = async (req, res) => {
 export const getOrdersController = async (req, res) => {
   console.log(req.user, "user here");
   try {
-    const orders = await orderModel.find(
+    const orders = await orderModel
+      .find
       // { buyer: req.user._id }
-      )
-    .populate("products", "-photo")
-    .populate("buyer", "name");
+      ()
+      .populate("products", "-photo")
+      .populate("buyer", "name");
     res.json(orders);
   } catch (error) {
     console.log(error);
@@ -253,8 +257,14 @@ export const getAllOrdersController = async (req, res) => {
 
 export const postOrdersController = async (req, res) => {
   try {
-    const { products, payment, status, buyer,totalprice } = req.body;
-    let order = new orderModel({ products, payment, status, buyer,totalprice });
+    const { products, payment, status, buyer, totalprice } = req.body;
+    let order = new orderModel({
+      products,
+      payment,
+      status,
+      buyer,
+      totalprice,
+    });
     order = await order.save();
     res.json(order);
   } catch (error) {
@@ -288,9 +298,8 @@ export const orderStatusController = async (req, res) => {
   }
 };
 
-
 //admin user
-export const getalluser=async(req,res)=>{
+export const getalluser = async (req, res) => {
   try {
     let user = await userModel.find({});
     res.json(user);
@@ -301,22 +310,25 @@ export const getalluser=async(req,res)=>{
       error,
     });
   }
-}
+};
 
-
-export const addtoRecommendation=async(req,res)=>{
+export const addtoRecommendation = async (req, res) => {
   try {
-    const {category,email}=req.body;
-    let user=await userModel.updateOne({email:email},{$addToSet:{
-      recommendation:category
-    }});
-     res.json(user);
+    const { category, email } = req.body;
+    let user = await userModel.updateOne(
+      { email: email },
+      {
+        $addToSet: {
+          recommendation: category,
+        },
+      }
+    );
+    res.json(user);
   } catch (error) {
     res.status(500).send({
       success: false,
       message: "Something went wrong",
       error,
     });
-    
   }
-}
+};

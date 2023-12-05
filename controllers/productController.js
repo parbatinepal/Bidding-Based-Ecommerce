@@ -1,8 +1,10 @@
 import slugify from "slugify";
 import productModel from "../models/productModel.js";
-import categoryModel from '../models/categoryModel.js'
+import categoryModel from "../models/categoryModel.js";
 import fs from "fs";
 import { count } from "console";
+import mongoose from "mongoose";
+
 
 export const createProductController = async (req, res) => {
   try {
@@ -76,13 +78,16 @@ export const getProductController = async (req, res) => {
     });
   }
 };
-export const getrecommendationproduct=async(req,res)=>{
+export const getrecommendationproduct = async (req, res) => {
   try {
-    const {recommendationList}=req.body;
+    const { recommendationList } = req.body;
+    const objectIdArray = recommendationList.map((strId) =>
+      new mongoose.Types.ObjectId(strId)
+    );
     const query = {
-      category: { $in: recommendationList },
+      category: { $in: objectIdArray },
     };
-    let products=await productModel.find(query);
+    let products = await productModel.find(query);
     res.json(products);
   } catch (error) {
     res.status(500).send({
@@ -91,7 +96,7 @@ export const getrecommendationproduct=async(req,res)=>{
       error: error.message,
     });
   }
-}
+};
 // get single product
 export const getSingleProductController = async (req, res) => {
   try {
@@ -325,23 +330,22 @@ export const realtedProductController = async (req, res) => {
   }
 };
 
-
 // get product by category
-export const productCategoryController = async (req,res) => {
+export const productCategoryController = async (req, res) => {
   try {
-      const category = await categoryModel.findOne({slug:req.params.slug})
-      const products = await productModel.find({category}).populate('category')
-      res.status(200).send({
-        success:true,
-        category,
-        products
-      })
+    const category = await categoryModel.findOne({ slug: req.params.slug });
+    const products = await productModel.find({ category }).populate("category");
+    res.status(200).send({
+      success: true,
+      category,
+      products,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).send({
-      success:false,
+      success: false,
       error,
-      message:'Error while getting products'
-    })
+      message: "Error while getting products",
+    });
   }
-}
+};
