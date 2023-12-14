@@ -130,6 +130,48 @@ export const LoginController = async (req, res) => {
   }
 };
 
+
+export const GetUser = async (req, res) => {
+  try {
+    const { email,  } = req.body;
+    
+    
+    
+    //check user
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Email is not registered",
+      });
+    }
+   
+      
+    res.status(200).send({
+      success: true,
+      message: "login successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+
+        recommendation: user.recommendation,
+
+        role: user.role,
+      },
+      
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in login",
+      error,
+    });
+  }
+};
+
 //forgotPassowrdController
 export const forgotPassowrdController = async (req, res) => {
   try {

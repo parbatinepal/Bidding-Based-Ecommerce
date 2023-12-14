@@ -68,4 +68,5 @@ router.get("/related-product/:pid/:cid", realtedProductController);
 router.get("/product-category/:slug", productCategoryController);
 router.post("/getrecommendationproduct", getrecommendationproduct);
 
+
 export default router;

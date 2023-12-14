@@ -18,6 +18,9 @@ const HomePage = () => {
   const { cart, setCart } = useCart([]);
   const [products, setProducts] = useState([]);
   const [recommendationList, setrecommendationList] = useState([]);
+  // const [recommendedPage, setRecommendedPage] = useState(1);
+  // const [recommendedLoading, setRecommendedLoading] = useState(false);
+
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
@@ -44,8 +47,17 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    getrecommendationproduct();
     getAllCategory();
     getTotal();
+
+    const timer = setInterval(()=>{ 
+      getrecommendationproduct();
+    getAllCategory();
+    getTotal();
+    },10000)
+return () => clearInterval(timer);
+    
   }, []);
 
   const data = JSON.stringify(localStorage.getItem("auth"));
@@ -65,9 +77,26 @@ const HomePage = () => {
       return [];
     }
   };
+
+  // // Fetch recommended products for a specific page
+  // const getRecommendedProductsByPage = async (pageNumber) => {
+  //   try {
+  //     setRecommendedLoading(true);
+  //     const { data } = await axios.get(
+  //       `http://localhost:4000/api/v1/product/recommended-products/${pageNumber}`
+  //     );
+  //     setRecommendedLoading(false);
+  //     return data.products;
+  //   } catch (error) {
+  //     setRecommendedLoading(false);
+  //     console.log(error);
+  //     return [];
+  //   }
+  // };
+
   const getrecommendationproduct = async () => {
     try {
-      console.log(data1);
+      
       setLoading(true);
       // const { data } = await axios.get(
       //   "http://localhost:4000/api/v1/product/getrecommendationproduct"
@@ -95,8 +124,45 @@ const HomePage = () => {
 
       // If you need the response data
       const responseData = await response.json();
-      console.log("Response Data:", responseData);
+      console.log("recommendation Data:", responseData);
       setrecommendationList(responseData);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      return [];
+    }
+  };
+
+  
+
+  const getUser = async () => {
+    try {
+      
+      setLoading(true);
+      
+      const response = await fetch(
+        "http://localhost:4000/api/v1/auth/getuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any other headers as needed
+          },
+          body: JSON.stringify({
+            email: data1["email"],
+          }),
+        }
+      );
+      console.log(response.body);
+      console.log(response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // If you need the response data
+      const responseData = await response.json();
+      console.log(responseData)
+      localStorage.setItem("user", JSON.stringify(responseData.user));
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -106,6 +172,7 @@ const HomePage = () => {
   // Fetch the first page of products
   const getAllProducts = async () => {
     try {
+      getUser()
       const products = await getProductsByPage(1);
       // const recommendationListproduct = await getrecommendationproduct();
       // setrecommendationList(recommendationListproduct);
@@ -143,6 +210,19 @@ const HomePage = () => {
       console.log(error);
     }
   };
+
+
+  // // Load more recommended products
+  // const loadMoreRecommended = async () => {
+  //   try {
+  //     const nextPage = recommendedPage + 1;
+  //     const recommendedProducts = await getRecommendedProductsByPage(nextPage);
+  //     setrecommendationList([...recommendationList, ...recommendedProducts]);
+  //     setRecommendedPage(nextPage);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // Load more products
   const loadMore = async () => {
@@ -243,7 +323,7 @@ const HomePage = () => {
           <div className="products col-md-7">
             <h1 className="title text-center">Recommended Products</h1>
             <div className="row">
-              {recommendationList?.map((p) => (
+            {recommendationList?.slice(0, 3)?.map((p) => (
                 <div
                   className="card col-md-4"
                   style={{ margin: "" }}
@@ -255,6 +335,7 @@ const HomePage = () => {
                     loading="lazy"
                     alt={p.name}
                   />
+
 
                   <div className="card-body">
                     <h5 className="fs-5 fw-bold">{p.name}</h5>
@@ -283,10 +364,35 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
+                
               ))}
             </div>
+            {/* Pagination for recommended products
+          {recommendedLoading && <p>Loading...</p>}
+          {!recommendedLoading && (
+            <div className="pagination d-flex justify-content-center">
+              
+              <button
+                className={`btn btn-info text-light ${
+                  recommendedPage ===  1 ? "active" : ""
+                }`}
+                onClick={() => handlePageChange( 1)}
+              >
+                1
+              </button>
+              
+            </div>
+          )} */}
+
+
+          
+          
+        </div>
+      )}
           </div>
-        )}
+          
+        
+        
         <div className="row" style={{ width: "100%" }}>
           <div style={{ width: "20%" }}></div>
           <div className="products col-md-7 ">
@@ -349,7 +455,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </div>
+      
     </Layout>
   );
 };
